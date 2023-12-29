@@ -1,6 +1,13 @@
 spring:
   application:
     name: microservices
+  security:
+    basic:
+      enabled: true
+    user:
+      name: cursoms-eureka-user
+      password: eureka
+
 
 server:
   port: 8761
