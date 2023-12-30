@@ -1,28 +1,25 @@
 package net.atlassian.vastidev.microservices;
 
-
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    @Override
-    protected void configure (HttpSecurity http) throws Exception{
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .csrf().disable()  // Desabilita CSRF para simplificar, ajuste conforme necessário
+                .authorizeRequests(authorize -> authorize
+                        .antMatchers("/eureka/**").permitAll()  // Permite todos os acessos para URLs do Eureka
+                        .anyRequest().authenticated()  // Exige autenticação para todas as outras requisições
+                )
+                .httpBasic();  // Utiliza autenticação básica
 
-
-
-
+        return http.build();
     }
-
-
 }
